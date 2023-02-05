@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"section5/controller"
+	"section5/model"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
 
-		}
-		fmt.Println("Request received!")
-		fmt.Println(r.Method)
-		w.Write([]byte("Hello world!"))
-	})
-	http.ListenAndServe("localhost:3000", mux)
+func main() {
+	mux := controller.Register()
+	db := model.Connect()
+	defer db.Close()
+	fmt.Println("Serving...")
+	log.Fatal(http.ListenAndServe("localhost:3000", mux))
 }
